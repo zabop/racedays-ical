@@ -6,17 +6,27 @@ from icalendar import Calendar, Event
 url = "https://www.racedays.run/api/event"
 
 
-def build_ics(confirmedDates, fname):
+def build_ics(
+    fname,
+    confirmedDates=True,
+    minMeters=42196,
+    latitude=None,
+    longitude=None,
+    radius=None,
+):
     params = {
         "pageSize": 750,
         "pageNumber": 1,
         "from": "2026-07-30",
         "countryCode": "NO",
-        "minMeters": 42196,
+        "minMeters": minMeters,
         "includeWeeklyEvents": False,
         "includeCarousels": True,
         "onlyInternal": False,
         "confirmedDates": confirmedDates,
+        "latitude": latitude,
+        "longitude": longitude,
+        "radius": radius,
     }
 
     data = requests.get(url, params=params).json()
@@ -40,5 +50,13 @@ def build_ics(confirmedDates, fname):
     print(f'Wrote {len(data["data"])} events to {fname}')
 
 
-build_ics(confirmedDates=True, fname="racedays.ics")
-build_ics(confirmedDates=False, fname="unconfirmed-racedays.ics")
+build_ics("racedays.ics")
+build_ics("unconfirmed-racedays.ics", confirmedDates=False)
+build_ics(
+    "oslo-racedays.ics",
+    confirmedDates=True,
+    minMeters=9999,
+    latitude=59.91,
+    longitude=10.74,
+    radius=50,
+)
