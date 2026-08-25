@@ -33,7 +33,13 @@ jobs:
 
       - run: python main.py
 
-      - run: mkdir _site && mv racedays.ics unconfirmed-racedays.ics oslo-racedays.ics _site/
+      - run: python spond-sync.py
+        env:
+          SPOND_USERNAME: ${{ secrets.SPOND_USERNAME }}
+          SPOND_PASSWORD: ${{ secrets.SPOND_PASSWORD }}
+          SPOND_GROUP_ID: ${{ secrets.SPOND_GROUP_ID }}
+
+      - run: mkdir _site && mv racedays.ics unconfirmed-racedays.ics oslo-racedays.ics spond.ics _site/
 
       - uses: actions/configure-pages@v5
 
