@@ -6,8 +6,18 @@ from icalendar import Calendar, Event
 url = "https://www.racedays.run/api/event"
 
 
+def get_x_api_key():
+
+    response = requests.get("https://www.racedays.run/events")
+    [line] = [line for line in response.text.splitlines() if "__rdApiKey = " in line]
+    x_api_key = line.split('"')[-2]
+
+    return x_api_key
+
+
 def build_ics(
     fname,
+    x_api_key,
     confirmedDates=True,
     minMeters=42196,
     latitude=None,
@@ -50,10 +60,13 @@ def build_ics(
     print(f'Wrote {len(data["data"])} events to {fname}')
 
 
-build_ics("racedays.ics")
-build_ics("unconfirmed-racedays.ics", confirmedDates=False)
+x_api_key = get_x_api_key()
+
+build_ics("racedays.ics", x_api_key)
+build_ics("unconfirmed-racedays.ics", x_api_key, confirmedDates=False)
 build_ics(
     "oslo-racedays.ics",
+    x_api_key,
     confirmedDates=True,
     minMeters=9999,
     latitude=59.91,
