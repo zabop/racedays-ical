@@ -39,7 +39,7 @@ def build_ics(
         "radius": radius,
     }
 
-    data = requests.get(url, params=params).json()
+    data = requests.get(url, params=params, headers={"x-api-key": x_api_key}).json()
 
     cal = Calendar()
     cal.add("prodid", "-//racedays-ical//EN")
